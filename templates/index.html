@@ -1,0 +1,39 @@
+<html>
+
+<head>
+
+<link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+<script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+
+</head>
+
+<body>
+
+<h2>Gestionale dati</h2>
+
+<div id="table"></div>
+
+<script>
+
+var tabledata = {{data|tojson}}
+
+new Tabulator("#table",{
+
+data:tabledata,
+layout:"fitColumns",
+pagination:true,
+paginationSize:10,
+
+columns:Object.keys(tabledata[0]).map(k => ({
+title:k,
+field:k,
+editor:"input"
+}))
+
+})
+
+</script>
+
+</body>
+
+</html>
