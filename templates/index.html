@@ -1,39 +1,76 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="it">
 <head>
-
-<link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionale dati</title>
+  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 24px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    h2 {
+      margin-bottom: 16px;
+    }
+    #error-banner {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #empty-banner {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: #6c757d;
+      padding: 24px;
+      border-radius: 6px;
+      text-align: center;
+    }
+    #table {
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+  </style>
 </head>
-
 <body>
+  <h2>Gestionale dati</h2>
 
-<h2>Gestionale dati</h2>
+  {% if error %}
+  <div id="error-banner">
+    ⚠️ {{ error }}
+  </div>
+  {% endif %}
 
-<div id="table"></div>
-
-<script>
-
-var tabledata = {{data|tojson}}
-
-new Tabulator("#table",{
-
-data:tabledata,
-layout:"fitColumns",
-pagination:true,
-paginationSize:10,
-
-columns:Object.keys(tabledata[0]).map(k => ({
-title:k,
-field:k,
-editor:"input"
-}))
-
-})
-
-</script>
+  {% if data %}
+  <div id="table"></div>
+  <script>
+    var tabledata = {{ data | tojson }};
+    new Tabulator("#table", {
+      data: tabledata,
+      layout: "fitColumns",
+      pagination: true,
+      paginationSize: 10,
+      columns: Object.keys(tabledata[0]).map(function(k) {
+        return { title: k, field: k, editor: "input" };
+      })
+    });
+  </script>
+  {% else %}
+  <div id="empty-banner">
+    <p>📭 Nessun dato da visualizzare al momento.</p>
+    <p style="font-size: 13px; margin-top: 6px;">Controlla che il foglio Google sia accessibile e riprova.</p>
+  </div>
+  {% endif %}
 
 </body>
-
 </html>
