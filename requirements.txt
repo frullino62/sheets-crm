@@ -1,5 +1,6 @@
-fastapi==0.111.0
-uvicorn[standard]==0.30.0
-pandas==2.2.2
-requests
-jinja2
+fastapi
+uvicorn
+pandas
+gspread
+google-auth
+python-dotenv
