@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-pandas
 gspread
 google-auth
-python-dotenv
+jinja2
+python-multipart
