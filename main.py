@@ -1,59 +1,40 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Form
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.requests import Request
 import sheets_db
 
 app = FastAPI()
 
-
-class Cliente(BaseModel):
-
-    nome: str
-    email: str
-    telefono: str
+templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/")
-def home():
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
 
-    return {"status": "CRM online"}
+    clienti = sheets_db.get_all()
 
-
-@app.get("/clienti")
-def get_clienti():
-
-    return sheets_db.get_all()
-
-
-@app.post("/clienti")
-def add_cliente(cliente: Cliente):
-
-    sheets_db.add_row([
-        cliente.nome,
-        cliente.email,
-        cliente.telefono
-    ])
-
-    return {"message": "cliente aggiunto"}
-
-
-@app.delete("/clienti/{row_id}")
-def delete_cliente(row_id: int):
-
-    sheets_db.delete_row(row_id)
-
-    return {"message": "cliente eliminato"}
-
-
-@app.put("/clienti/{row_id}")
-def update_cliente(row_id: int, cliente: Cliente):
-
-    sheets_db.update_row(
-        row_id,
-        [
-            cliente.nome,
-            cliente.email,
-            cliente.telefono
-        ]
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "clienti": clienti}
     )
 
-    return {"message": "cliente aggiornato"}
+
+@app.post("/add")
+def add_cliente(
+    nome: str = Form(...),
+    email: str = Form(...),
+    telefono: str = Form(...)
+):
+
+    sheets_db.add(nome, email, telefono)
+
+    return {"status": "ok"}
+
+
+@app.post("/delete")
+def delete_cliente(row: int = Form(...)):
+
+    sheets_db.delete(row)
+
+    return {"status": "deleted"}
