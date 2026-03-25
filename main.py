@@ -1,47 +1,59 @@
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
-
 from fastapi import FastAPI
-from fastapi.templating import Jinja2Templates
-from fastapi.requests import Request
-
-from sheets import get_data
+from pydantic import BaseModel
+import sheets_db
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-executor = ThreadPoolExecutor()
+
+
+class Cliente(BaseModel):
+
+    nome: str
+    email: str
+    telefono: str
 
 
 @app.get("/")
-async def home(request: Request):
-    """
-    Route principale — usa async + executor per non bloccare il server
-    durante la lettura del CSV da Google Sheets.
-    """
-    loop = asyncio.get_event_loop()
-    data = await loop.run_in_executor(executor, get_data)
+def home():
 
-    if not data:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "data": [], "error": "Dati non disponibili al momento. Riprova tra poco."}
-        )
+    return {"status": "CRM online"}
 
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "data": data}
+
+@app.get("/clienti")
+def get_clienti():
+
+    return sheets_db.get_all()
+
+
+@app.post("/clienti")
+def add_cliente(cliente: Cliente):
+
+    sheets_db.add_row([
+        cliente.nome,
+        cliente.email,
+        cliente.telefono
+    ])
+
+    return {"message": "cliente aggiunto"}
+
+
+@app.delete("/clienti/{row_id}")
+def delete_cliente(row_id: int):
+
+    sheets_db.delete_row(row_id)
+
+    return {"message": "cliente eliminato"}
+
+
+@app.put("/clienti/{row_id}")
+def update_cliente(row_id: int, cliente: Cliente):
+
+    sheets_db.update_row(
+        row_id,
+        [
+            cliente.nome,
+            cliente.email,
+            cliente.telefono
+        ]
     )
 
-
-@app.get("/health")
-async def health():
-    """
-    Endpoint di health check — utile per Render e per monitoraggio.
-    Ritorna lo stato dell'app e il numero di record disponibili.
-    """
-    loop = asyncio.get_event_loop()
-    try:
-        data = await loop.run_in_executor(executor, get_data)
-        return {"status": "ok", "records": len(data)}
-    except Exception as e:
-        return {"status": "error", "detail": str(e)}
+    return {"message": "cliente aggiornato"}
