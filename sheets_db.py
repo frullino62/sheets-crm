@@ -1,21 +1,24 @@
+import os
 import gspread
 from google.oauth2.service_account import Credentials
 
-SHEET_NAME = "CRM"
+scope = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
 
-def get_sheet():
+creds = Credentials.from_service_account_info(
+    {
+        "type": "service_account",
+        "project_id": os.environ["GOOGLE_PROJECT_ID"],
+        "private_key": os.environ["GOOGLE_PRIVATE_KEY"].replace("\\n", "\n"),
+        "client_email": os.environ["GOOGLE_CLIENT_EMAIL"],
+        "token_uri": "https://oauth2.googleapis.com/token",
+    },
+    scopes=scope
+)
 
-    scope = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ]
-
-    creds = Credentials.from_service_account_file(
-        "credentials.json",
-        scopes=scope
-    )
-
-    client = gspread.authorize(creds)
+client = gspread.authorize(creds)
 
     sheet = client.open(SHEET_NAME).sheet1
 
