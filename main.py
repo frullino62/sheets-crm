@@ -12,6 +12,7 @@ templates = Jinja2Templates(directory="templates")
 def home(request: Request):
     try:
         clienti = sheets_db.get_all()
+        clienti = list(clienti)
     except Exception as e:
         return {"errore_backend": str(e)}
 
