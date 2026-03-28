@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 import sheets_db
 
 app = FastAPI()
@@ -23,13 +24,13 @@ def home(request: Request):
 @app.get("/add")
 def add(nome: str, email: str):
     sheets_db.add_cliente(nome, email)
-    return {"status": "ok"}
+    return RedirectResponse(url="/", status_code=302)
 
 
 @app.get("/delete/{index}")
 def delete(index: int):
     sheets_db.delete_cliente(index)
-    return {"status": "deleted"}
+    return RedirectResponse(url="/", status_code=302)
 
 
 @app.get("/clienti")
