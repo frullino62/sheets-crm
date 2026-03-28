@@ -10,7 +10,7 @@ scope = [
 ]
 
 creds = Credentials.from_service_account_file(
-    "credentials.json",
+    "crm-bot-491322-1cd9597248d7.json",
     scopes=scope
 )
 
