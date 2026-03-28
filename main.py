@@ -7,7 +7,10 @@ app = FastAPI()
 
 from jinja2 import Environment, FileSystemLoader
 
-templates = Jinja2Templates(directory="templates")
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=True)
 
 
