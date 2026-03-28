@@ -1,50 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CRM Clienti</title>
+    <title>CRM PRO</title>
+
     <style>
         body {
             font-family: Arial;
-            max-width: 600px;
+            background: #f5f6fa;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
             margin: auto;
+            background: white;
             padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+
+        h1 {
+            text-align: center;
+        }
+
         input {
-            padding: 8px;
+            padding: 10px;
             margin: 5px;
+            width: 40%;
         }
+
         button {
-            padding: 8px 12px;
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
-        li {
-            margin: 10px 0;
+
+        .cliente {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .delete {
+            color: red;
+            cursor: pointer;
         }
     </style>
+
 </head>
 <body>
 
-<h1>CRM Clienti</h1>
+<div class="container">
+
+<h1>CRM PRO</h1>
 
 <h3>Aggiungi cliente</h3>
 
-<form action="/add" method="get">
-    <input type="text" name="nome" placeholder="Nome" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <button type="submit">Aggiungi</button>
-</form>
+<input id="nome" placeholder="Nome">
+<input id="email" placeholder="Email">
+<button onclick="addCliente()">Aggiungi</button>
 
 <hr>
 
-<h3>Lista Clienti</h3>
+<h3>Clienti</h3>
 
-<ul>
+<div id="lista">
     {% for c in clienti %}
-        <li>
-            {{ c.nome }} - {{ c.email }}
-            <a href="/delete/{{ loop.index0 }}">❌</a>
-        </li>
+        <div class="cliente">
+            <span>{{ c.nome }} - {{ c.email }}</span>
+            <span class="delete" onclick="deleteCliente({{ loop.index0 }})">❌</span>
+        </div>
     {% endfor %}
-</ul>
+</div>
+
+</div>
+
+<script>
+
+async function addCliente() {
+    let nome = document.getElementById("nome").value;
+    let email = document.getElementById("email").value;
+
+    await fetch(`/add?nome=${nome}&email=${email}`);
+    location.reload();
+}
+
+async function deleteCliente(index) {
+    await fetch(`/delete/${index}`);
+    location.reload();
+}
+
+</script>
 
 </body>
 </html>
