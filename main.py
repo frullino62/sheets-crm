@@ -30,10 +30,10 @@ def get_clienti():
     return sheets_db.get_all()
 
 
-@app.post("/clienti")
-def add_cliente(nome: str, email: str):
+@app.get("/add")
+def add_cliente_get(nome: str, email: str):
     sheets_db.add_cliente(nome, email)
-    return {"status": "cliente aggiunto"}
+    return {"status": "cliente aggiunto (GET)"}
 
 
 @app.delete("/clienti/{index}")
