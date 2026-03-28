@@ -10,7 +10,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-# 🔥 legge il JSON da Render ENV
+# legge JSON da Render ENV
 creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 
 creds = Credentials.from_service_account_info(
@@ -34,4 +34,7 @@ def add_cliente(nome, email):
 
 
 def delete_cliente(index):
-    sheet().delete_rows(index + 1)
+    sheet().delete_rows(index + 2)  
+    # +2 perché:
+    # riga 1 = header
+    # index parte da 0
