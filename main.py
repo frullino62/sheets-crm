@@ -9,10 +9,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def home(request: Request):
-    data = sheets_db.get_all()
-
-    # FIX QUI 👇
-    clienti = data["records"] if isinstance(data, dict) else data
+    clienti = sheets_db.get_all()
 
     return templates.TemplateResponse(
         "index.html",
@@ -25,13 +22,13 @@ def home(request: Request):
 
 @app.get("/add")
 def add(nome: str, email: str):
-    sheets_db.add(nome, email)
+    sheets_db.add_cliente(nome, email)
     return {"status": "ok"}
 
 
 @app.get("/delete/{index}")
 def delete(index: int):
-    sheets_db.delete(index)
+    sheets_db.delete_cliente(index)
     return {"status": "deleted"}
 
 
