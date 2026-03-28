@@ -1,44 +1,28 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>CRM</title>
+    <title>CRM Clienti</title>
 </head>
-
 <body>
 
-<h2>Clienti</h2>
+    <h1>CRM Clienti</h1>
 
-<table border="1">
-<tr>
-<th>Nome</th>
-<th>Email</th>
-<th>Telefono</th>
-</tr>
+    <h2>Aggiungi Cliente</h2>
+    <form action="/add" method="get">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <button type="submit">Aggiungi</button>
+    </form>
 
-{% for c in clienti %}
-
-<tr>
-<td>{{c.nome}}</td>
-<td>{{c.email}}</td>
-<td>{{c.telefono}}</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-<h3>Aggiungi cliente</h3>
-
-<form action="/add" method="post">
-
-<input name="nome" placeholder="Nome">
-<input name="email" placeholder="Email">
-<input name="telefono" placeholder="Telefono">
-
-<button type="submit">Aggiungi</button>
-
-</form>
+    <h2>Lista Clienti</h2>
+    <ul>
+        {% for c in clienti %}
+            <li>
+                {{ c.nome }} - {{ c.email }}
+                <a href="/delete/{{ loop.index0 }}">❌</a>
+            </li>
+        {% endfor %}
+    </ul>
 
 </body>
 </html>
