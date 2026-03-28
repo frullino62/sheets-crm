@@ -1,64 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>CRM PRO</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            background: #f5f6fa;
-            padding: 30px;
-        }
-
-        .box {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        input {
-            padding: 10px;
-            margin: 5px;
-        }
-
-        button {
-            padding: 10px;
-            background: black;
-            color: white;
-            border: none;
-        }
-
-        .cliente {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-    </style>
-</head>
 <body>
-
-<div class="box">
 
 <h1>CRM</h1>
 
-<form action="/add" method="get">
-    <input name="nome" placeholder="Nome" required>
-    <input name="email" placeholder="Email" required>
-    <button>Aggiungi</button>
-</form>
-
-<hr>
-
+<ul>
 {% for c in clienti %}
-    <div class="cliente">
-        <span>{{ c.nome }} - {{ c.email }}</span>
-        <a href="/delete/{{ loop.index0 }}">❌</a>
-    </div>
+    <li>{{ c.get("nome") }} - {{ c.get("email") }}</li>
 {% endfor %}
-
-</div>
+</ul>
 
 </body>
 </html>
