@@ -9,7 +9,10 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def home(request: Request):
-    clienti = sheets_db.get_all()
+    data = sheets_db.get_all()
+
+    # FIX QUI 👇
+    clienti = data["records"] if isinstance(data, dict) else data
 
     return templates.TemplateResponse(
         "index.html",
