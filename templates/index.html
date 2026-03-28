@@ -40,7 +40,7 @@
 <ul>
     {% for c in clienti %}
         <li>
-            {{ c["nome"] }} - {{ c["email"] }}
+            {{ c.nome }} - {{ c.email }}
             <a href="/delete/{{ loop.index0 }}">❌</a>
         </li>
     {% endfor %}
