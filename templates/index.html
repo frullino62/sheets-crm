@@ -1,12 +1,108 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>CRM PRO</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .list {
+            margin-top: 20px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .delete {
+            color: red;
+            text-decoration: none;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
 <body>
 
-<h1>OK CRM</h1>
+<div class="container">
 
-{% for c in clienti %}
-    <p>{{ c.get("nome") }} - {{ c.get("email") }}</p>
-{% endfor %}
+<div class="topbar">
+    <span>👤 {{ user }}</span>
+    <a href="/login">Logout</a>
+</div>
+
+<h1>CRM Clienti</h1>
+
+<form action="/add" method="get">
+    <input name="nome" placeholder="Nome" required>
+    <input name="email" placeholder="Email" required>
+    <button>Aggiungi</button>
+</form>
+
+<div class="list">
+
+{% if clienti %}
+    {% for c in clienti %}
+        <div class="item">
+            <span>{{ c.get("nome") }} - {{ c.get("email") }}</span>
+            <a class="delete" href="/delete/{{ loop.index0 }}">❌</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Nessun cliente</p>
+{% endif %}
+
+</div>
+
+</div>
 
 </body>
 </html>
