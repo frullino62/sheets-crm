@@ -1,35 +1,35 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 import sheets_db
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+
+# 🔹 HOME (serve per capire se il server funziona)
+@app.get("/")
+def home():
+    return {"status": "ok"}
 
 
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-
-    data = sheets_db.get_all()
-
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "data": data}
-    )
-
-
-@app.post("/update")
-def update(row: int, nome: str, email: str, telefono: str):
-
-    sheets_db.update(row, nome, email, telefono)
-
-    return {"ok": True}
+# 🔹 TEST GOOGLE SHEETS
+@app.get("/test")
+def test():
+    try:
+        data = sheets_db.get_all()
+        return {
+            "status": "success",
+            "records": data
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
 
-@app.post("/delete")
-def delete(row: int):
-
-    sheets_db.delete(row)
-
-    return {"ok": True}
+# 🔹 ENDPOINT CLIENTI (finale)
+@app.get("/clienti")
+def get_clienti():
+    try:
+        return sheets_db.get_all()
+    except Exception as e:
+        return {"error": str(e)}
