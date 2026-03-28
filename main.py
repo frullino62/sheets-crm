@@ -4,9 +4,9 @@ from fastapi.responses import RedirectResponse
 from auth import router as auth_router
 import sheets_db
 
-app.include_router(auth_router)
-
 app = FastAPI()
+
+app.include_router(auth_router)
 
 from jinja2 import Environment, FileSystemLoader
 
