@@ -2,13 +2,20 @@
 <html>
 <body>
 
-<h1>CRM</h1>
+<h1>CRM OK</h1>
 
-<ul>
-{% for c in clienti %}
-    <li>{{ c.get("nome") }} - {{ c.get("email") }}</li>
-{% endfor %}
-</ul>
+{% if clienti %}
+    <ul>
+    {% for c in clienti %}
+        <li>
+            {{ c.get("nome", "NO NOME") }} -
+            {{ c.get("email", "NO EMAIL") }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Nessun cliente</p>
+{% endif %}
 
 </body>
 </html>
