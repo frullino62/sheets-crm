@@ -9,23 +9,8 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/")
-def home(request: Request):
-    clienti_raw = sheets_db.get_all()
-
-    clienti = []
-    for c in clienti_raw:
-        clienti.append({
-            "nome": str(c.get("nome", "")),
-            "email": str(c.get("email", ""))
-        })
-
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "clienti": clienti
-        }
-    )
+def home():
+    return {"ok": True}
 
 
 @app.get("/add")
