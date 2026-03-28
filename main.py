@@ -16,12 +16,12 @@ def home(request: Request):
         return {"errore_backend": str(e)}
 
     return templates.TemplateResponse(
-        name="index.html",   # 👈 IMPORTANTE (usa name=)
-        context={
-            "request": request,
-            "clienti": clienti
-        }
-    )
+    name="index.html",
+    context={
+        "request": request,
+        "clienti": clienti
+    }
+)
 
 
 @app.get("/add")
