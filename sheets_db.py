@@ -3,7 +3,7 @@ import json
 from google.oauth2.service_account import Credentials
 import gspread
 
-SHEET_ID = os.environ["SHEET_ID"]
+SHEET_ID = "10EU1gQSBbgA3k-n2ltzlJqW54NQ1aqBobHpvPdOfmsU"
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -28,9 +28,9 @@ def get_all():
     return sheet().get_all_records()
 
 
-def add(nome, email):
+def add_cliente(nome, email):
     sheet().append_row([nome, email])
 
 
-def delete(index):
+def delete_cliente(index):
     sheet().delete_rows(index + 2)
