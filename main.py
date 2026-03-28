@@ -15,8 +15,22 @@ templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=Tr
 
 
 @app.get("/")
-def home():
-    return {"TEST": "FUNZIONA"}
+def home(request: Request):
+    user = request.cookies.get("user")
+
+    if not user:
+        return RedirectResponse("/login")
+
+    clienti = list(sheets_db.get_all())
+
+    return templates.TemplateResponse(
+        name="index.html",
+        context={
+            "request": request,
+            "clienti": clienti,
+            "user": user
+        }
+    )
 
 
 @app.get("/add")
