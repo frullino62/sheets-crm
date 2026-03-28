@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.requests import Request
 import sheets_db
 
 app = FastAPI()
@@ -10,31 +9,27 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-def index(request: Request):
+def home(request: Request):
 
-    clienti = sheets_db.get_all()
+    data = sheets_db.get_all()
 
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "clienti": clienti}
+        {"request": request, "data": data}
     )
 
 
-@app.post("/add")
-def add_cliente(
-    nome: str = Form(...),
-    email: str = Form(...),
-    telefono: str = Form(...)
-):
+@app.post("/update")
+def update(row: int, nome: str, email: str, telefono: str):
 
-    sheets_db.add(nome, email, telefono)
+    sheets_db.update(row, nome, email, telefono)
 
-    return {"status": "ok"}
+    return {"ok": True}
 
 
 @app.post("/delete")
-def delete_cliente(row: int = Form(...)):
+def delete(row: int):
 
     sheets_db.delete(row)
 
-    return {"status": "deleted"}
+    return {"ok": True}
