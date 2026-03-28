@@ -5,21 +5,12 @@
 </head>
 <body>
 
-<h1>CRM Clienti</h1>
-
-<form action="/add" method="get">
-    <input name="nome" placeholder="Nome">
-    <input name="email" placeholder="Email">
-    <button type="submit">Aggiungi</button>
-</form>
+<h1>Lista Clienti</h1>
 
 <ul>
-{% for c in clienti %}
-    <li>
-        {{ c["nome"] }} - {{ c["email"] }}
-        <a href="/delete/{{ loop.index0 }}">❌</a>
-    </li>
-{% endfor %}
+    {% for c in clienti %}
+        <li>{{ c["nome"] }} - {{ c["email"] }}</li>
+    {% endfor %}
 </ul>
 
 </body>
