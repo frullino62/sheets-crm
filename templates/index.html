@@ -10,23 +10,17 @@
             padding: 30px;
         }
 
-        .container {
-            max-width: 700px;
+        .box {
+            max-width: 600px;
             margin: auto;
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
         }
 
         input {
             padding: 10px;
             margin: 5px;
-            width: 40%;
         }
 
         button {
@@ -34,67 +28,37 @@
             background: black;
             color: white;
             border: none;
-            cursor: pointer;
         }
 
         .cliente {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .delete {
-            color: red;
-            cursor: pointer;
+            margin: 10px 0;
         }
     </style>
-
 </head>
 <body>
 
-<div class="container">
+<div class="box">
 
-<h1>CRM PRO</h1>
+<h1>CRM</h1>
 
-<h3>Aggiungi cliente</h3>
-
-<input id="nome" placeholder="Nome">
-<input id="email" placeholder="Email">
-<button onclick="addCliente()">Aggiungi</button>
+<form action="/add" method="get">
+    <input name="nome" placeholder="Nome" required>
+    <input name="email" placeholder="Email" required>
+    <button>Aggiungi</button>
+</form>
 
 <hr>
 
-<h3>Clienti</h3>
-
-<div id="lista">
-    <ul>
-    {% for c in clienti %}
-        <li>
-            {{ c.nome }} - {{ c.email }}
-        </li>
-    {% endfor %}
-    </ul>
-</div>
+{% for c in clienti %}
+    <div class="cliente">
+        <span>{{ c.nome }} - {{ c.email }}</span>
+        <a href="/delete/{{ loop.index0 }}">❌</a>
+    </div>
+{% endfor %}
 
 </div>
-
-<script>
-
-async function addCliente() {
-    let nome = document.getElementById("nome").value;
-    let email = document.getElementById("email").value;
-
-    await fetch(`/add?nome=${nome}&email=${email}`);
-    location.reload();
-}
-
-async function deleteCliente(index) {
-    await fetch(`/delete/${index}`);
-    location.reload();
-}
-
-</script>
 
 </body>
 </html>
