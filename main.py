@@ -5,7 +5,10 @@ import sheets_db
 
 app = FastAPI()
 
+from jinja2 import Environment, FileSystemLoader
+
 templates = Jinja2Templates(directory="templates")
+templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=True)
 
 
 @app.get("/")
