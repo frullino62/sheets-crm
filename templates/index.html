@@ -5,24 +5,22 @@
 </head>
 <body>
 
-    <h1>CRM Clienti</h1>
+<h1>CRM Clienti</h1>
 
-    <h2>Aggiungi Cliente</h2>
-    <form action="/add" method="get">
-        <input type="text" name="nome" placeholder="Nome" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <button type="submit">Aggiungi</button>
-    </form>
+<form action="/add" method="get">
+    <input name="nome" placeholder="Nome">
+    <input name="email" placeholder="Email">
+    <button type="submit">Aggiungi</button>
+</form>
 
-    <h2>Lista Clienti</h2>
-    <ul>
-        {% for c in clienti %}
-            <li>
-                {{ c.nome }} - {{ c.email }}
-                <a href="/delete/{{ loop.index0 }}">❌</a>
-            </li>
-        {% endfor %}
-    </ul>
+<ul>
+{% for c in clienti %}
+    <li>
+        {{ c["nome"] }} - {{ c["email"] }}
+        <a href="/delete/{{ loop.index0 }}">❌</a>
+    </li>
+{% endfor %}
+</ul>
 
 </body>
 </html>
