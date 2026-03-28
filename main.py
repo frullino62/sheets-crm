@@ -13,19 +13,15 @@ templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=Tr
 
 @app.get("/")
 def home(request: Request):
-    try:
-        clienti = sheets_db.get_all()
-        clienti = list(clienti)
-    except Exception as e:
-        return {"errore_backend": str(e)}
+    clienti = list(sheets_db.get_all())
 
     return templates.TemplateResponse(
-    name="index.html",
-    context={
-        "request": request,
-        "clienti": clienti
-    }
-)
+        name="index.html",
+        context={
+            "request": request,
+            "clienti": clienti
+        }
+    )
 
 
 @app.get("/add")
