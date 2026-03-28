@@ -2,14 +2,47 @@
 <html>
 <head>
     <title>CRM Clienti</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+        }
+        button {
+            padding: 8px 12px;
+        }
+        li {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Lista Clienti</h1>
+<h1>CRM Clienti</h1>
+
+<h3>Aggiungi cliente</h3>
+
+<form action="/add" method="get">
+    <input type="text" name="nome" placeholder="Nome" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <button type="submit">Aggiungi</button>
+</form>
+
+<hr>
+
+<h3>Lista Clienti</h3>
 
 <ul>
     {% for c in clienti %}
-        <li>{{ c["nome"] }} - {{ c["email"] }}</li>
+        <li>
+            {{ c["nome"] }} - {{ c["email"] }}
+            <a href="/delete/{{ loop.index0 }}">❌</a>
+        </li>
     {% endfor %}
 </ul>
 
