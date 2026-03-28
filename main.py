@@ -12,7 +12,6 @@ templates = Jinja2Templates(directory="templates")
 def home(request: Request):
     clienti_raw = sheets_db.get_all()
 
-    # 🔥 FIX: convertiamo tutto in oggetti puliti
     clienti = []
     for c in clienti_raw:
         clienti.append({
