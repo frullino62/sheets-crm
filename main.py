@@ -10,11 +10,14 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def home(request: Request):
-    clienti = sheets_db.get_all()
+    try:
+        clienti = sheets_db.get_all()
+    except Exception as e:
+        return {"errore_backend": str(e)}
 
     return templates.TemplateResponse(
-        "index.html",
-        {
+        name="index.html",   # 👈 IMPORTANTE (usa name=)
+        context={
             "request": request,
             "clienti": clienti
         }
