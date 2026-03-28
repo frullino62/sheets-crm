@@ -3,4 +3,3 @@ uvicorn
 gspread
 google-auth
 jinja2
-python-multipart
