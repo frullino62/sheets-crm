@@ -19,19 +19,13 @@ templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=Tr
 
 @app.get("/")
 def home(request: Request):
-    user = request.cookies.get("user")
-
-    if not user:
-        return RedirectResponse("/login")
-
-    clienti = list(sheets_db.get_all())
+    clienti = sheets_db.get_all()
 
     return templates.TemplateResponse(
-        name="index.html",
-        context={
+        "index.html",   # 🔴 STRINGA, NON dict
+        {
             "request": request,
-            "clienti": clienti,
-            "user": user
+            "clienti": clienti
         }
     )
 
