@@ -9,6 +9,22 @@ def home():
     return {"status": "ok"}
 
 
+# 🔥 TEST GOOGLE SHEETS
+@app.get("/test")
+def test():
+    try:
+        data = sheets_db.get_all()
+        return {
+            "status": "success",
+            "records": data
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+
 @app.get("/clienti")
 def get_clienti():
     return sheets_db.get_all()
