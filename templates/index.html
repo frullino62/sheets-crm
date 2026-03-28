@@ -68,12 +68,13 @@
 <h3>Clienti</h3>
 
 <div id="lista">
+    <ul>
     {% for c in clienti %}
-        <div class="cliente">
-            <span>{{ c.nome }} - {{ c.email }}</span>
-            <span class="delete" onclick="deleteCliente({{ loop.index0 }})">❌</span>
-        </div>
+        <li>
+            {{ c.nome }} - {{ c.email }}
+        </li>
     {% endfor %}
+    </ul>
 </div>
 
 </div>
