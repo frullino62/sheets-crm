@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from auth import router as auth_router
 import sheets_db
+
+app.include_router(auth_router)
 
 app = FastAPI()
 
@@ -32,6 +35,12 @@ def home(request: Request):
         }
     )
 
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request}
+    )
 
 @app.get("/add")
 def add(nome: str, email: str):
