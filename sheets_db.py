@@ -1,6 +1,6 @@
-import os
 import gspread
 from google.oauth2.service_account import Credentials
+import os
 
 SHEET_ID = os.environ["SHEET_ID"]
 
@@ -28,12 +28,9 @@ def add(nome, email, telefono):
     sheet().append_row([nome, email, telefono])
 
 
-def delete(row):
-    sheet().delete_rows(row)
-
-
 def update(row, nome, email, telefono):
     sheet().update(f"A{row}:C{row}", [[nome, email, telefono]])
 
-    sheet = get_sheet()
-    sheet.update(f"A{index}", [values])
+
+def delete(row):
+    sheet().delete_rows(row)
