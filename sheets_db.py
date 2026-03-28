@@ -1,30 +1,32 @@
-import os
-import json
-import gspread
 from google.oauth2.service_account import Credentials
+import gspread
 
 SHEET_ID = "10EU1gQSBbgA3k-n2ltzlJqW54NQ1aqBobHpvPdOfmsU"
 
-def get_sheet():
-    creds_json = os.getenv("GOOGLE_CREDENTIALS")
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
 
-    if not creds_json:
-        raise Exception("GOOGLE_CREDENTIALS non trovato")
+creds = Credentials.from_service_account_file(
+    "credentials.json",
+    scopes=SCOPES
+)
 
-    creds_dict = json.loads(creds_json)
+client = gspread.authorize(creds)
 
-    creds = Credentials.from_service_account_info(
-        creds_dict,
-        scopes=[
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive"
-        ]
-    )
 
-    client = gspread.authorize(creds)
+def sheet():
     return client.open_by_key(SHEET_ID).sheet1
 
 
 def get_all():
-    sheet = get_sheet()
-    return sheet.get_all_records()
+    return sheet().get_all_records()
+
+
+def add_cliente(nome, email):
+    sheet().append_row([nome, email])
+
+
+def delete_cliente(index):
+    sheet().delete_rows(index + 1)  # +1 perché header
