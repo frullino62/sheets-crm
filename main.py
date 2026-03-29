@@ -7,158 +7,87 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    try:
-        clienti = sheets_db.get_all()
-    except Exception as e:
-        return f"<h1>Errore: {str(e)}</h1>"
+    clienti = sheets_db.get_clienti()
+    opere = sheets_db.get_opere()
 
     html = """
     <html>
     <head>
         <title>CRM PRO</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <style>
-            body {
-                font-family: 'Segoe UI', sans-serif;
-                background: #0f172a;
-                color: #fff;
-                margin: 0;
-                padding: 0;
-            }
-
-            .container {
-                max-width: 900px;
-                margin: auto;
-                padding: 30px;
-            }
-
-            h1 {
-                text-align: center;
-                margin-bottom: 30px;
-            }
-
-            .card {
-                background: #1e293b;
-                padding: 20px;
-                border-radius: 12px;
-                margin-bottom: 20px;
-            }
-
-            input {
-                padding: 12px;
-                border-radius: 8px;
-                border: none;
-                margin-right: 10px;
-                width: 200px;
-            }
-
-            button {
-                padding: 12px 18px;
-                border-radius: 8px;
-                border: none;
-                background: #22c55e;
-                color: white;
-                cursor: pointer;
-            }
-
-            button:hover {
-                background: #16a34a;
-            }
-
-            .search {
-                width: 100%;
-                margin-bottom: 20px;
-                padding: 12px;
-                border-radius: 8px;
-                border: none;
-            }
-
-            .cliente {
-                display: flex;
-                justify-content: space-between;
-                padding: 15px;
-                border-bottom: 1px solid #334155;
-            }
-
-            .delete {
-                color: #ef4444;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-            .delete:hover {
-                color: #dc2626;
-            }
+            body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
+            .card { background:#1e293b; padding:20px; margin-bottom:20px; border-radius:10px; }
+            input { padding:10px; margin:5px; border-radius:5px; border:none; }
+            button { padding:10px; background:#22c55e; color:white; border:none; border-radius:5px; }
+            .cliente { margin-bottom:15px; padding:10px; border-bottom:1px solid #334155; }
+            .opera { margin-left:20px; font-size:14px; color:#cbd5f5; }
         </style>
-
-        <script>
-            function searchClient() {
-                let input = document.getElementById("search").value.toLowerCase();
-                let items = document.getElementsByClassName("cliente");
-
-                for (let i = 0; i < items.length; i++) {
-                    let text = items[i].innerText.toLowerCase();
-                    items[i].style.display = text.includes(input) ? "" : "none";
-                }
-            }
-        </script>
     </head>
-
     <body>
-        <div class="container">
 
-            <h1>🚀 CRM PRO</h1>
+    <h1>🚀 CRM RELAZIONALE</h1>
 
-            <div class="card">
-                <form action="/add">
-                    <input type="text" name="nome" placeholder="Nome" required>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <button type="submit">Aggiungi</button>
-                </form>
-            </div>
+    <div class="card">
+        <h2>Aggiungi Cliente</h2>
+        <form action="/add_cliente">
+            <input name="nome" placeholder="Nome" required>
+            <input name="email" placeholder="Email" required>
+            <button>Aggiungi</button>
+        </form>
+    </div>
 
-            <input id="search" class="search" placeholder="🔎 Cerca cliente..." onkeyup="searchClient()">
+    <div class="card">
+        <h2>Aggiungi Opera</h2>
+        <form action="/add_opera">
+            <input name="cliente_id" placeholder="ID Cliente" required>
+            <input name="barca" placeholder="Barca" required>
+            <input name="opera" placeholder="Opera" required>
+            <input name="tipo" placeholder="Tipo" required>
+            <button>Aggiungi</button>
+        </form>
+    </div>
 
-            <div class="card">
+    <div class="card">
+        <h2>Clienti + Opere</h2>
     """
 
-    for i, c in enumerate(clienti):
-        nome = c.get("nome", "")
-        email = c.get("email", "")
+    for c in clienti:
+        cid = c.get("id")
+        nome = c.get("nome")
+        email = c.get("email")
 
         html += f"""
         <div class="cliente">
-            <span>{nome} - {email}</span>
-            <a class="delete" href="/delete/{i}">✖</a>
-        </div>
+            <strong>{nome}</strong> ({email}) - ID: {cid}
         """
 
-    html += """
-            </div>
+        opere_cliente = sheets_db.get_opere_by_cliente(cid)
 
-        </div>
+        for o in opere_cliente:
+            html += f"""
+            <div class="opera">
+                🚤 {o.get("barca")} → {o.get("opera")} ({o.get("tipo")})
+            </div>
+            """
+
+        html += "</div>"
+
+    html += """
+    </div>
     </body>
     </html>
     """
 
     return html
 
-@app.get("/add")
-def add(nome: str, email: str):
+
+@app.get("/add_cliente")
+def add_cliente(nome: str, email: str):
     sheets_db.add_cliente(nome, email)
-    return RedirectResponse(url="/", status_code=302)
+    return RedirectResponse("/", status_code=302)
 
 
-@app.get("/delete/{index}")
-def delete(index: int):
-    sheets_db.delete_cliente(index)
-    return RedirectResponse(url="/", status_code=302)
-
-
-@app.get("/clienti")
-def clienti():
-    return {
-        "status": "success",
-        "records": sheets_db.get_all()
-    }
+@app.get("/add_opera")
+def add_opera(cliente_id: str, barca: str, opera: str, tipo: str):
+    sheets_db.add_opera(cliente_id, barca, opera, tipo)
+    return RedirectResponse("/", status_code=302)
