@@ -4,7 +4,14 @@ import sheets_db
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+print("BASE_DIR:", BASE_DIR)
+print("FILES:", os.listdir(BASE_DIR))
+print("TEMPLATES:", os.listdir(os.path.join(BASE_DIR, "templates")))
+
+import os
+
+BASE_DIR = os.path.dirname(__file__)
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 
 @app.get("/")
