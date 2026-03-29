@@ -19,7 +19,11 @@ print("FILES:", os.listdir("templates"))
 @app.get("/")
 def home(request: Request):
     try:
-        clienti = sheets_db.get_all()
+        clienti_raw = sheets_db.get_all()
+
+        # 🔴 FIX CRITICO
+        clienti = [dict(c) for c in clienti_raw]
+
     except Exception as e:
         return {"errore": str(e)}
 
