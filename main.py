@@ -1,24 +1,21 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
-from auth import router as auth_router
 import sheets_db
-import os
 
 app = FastAPI()
 
-app.include_router(auth_router)
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory="templates")
 
-import os
-
-print("FILES:", os.listdir("templates"))
 
 @app.get("/")
-def home():
-    return {"ok": True}
+def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "clienti": []
+        }
+    )
 
 
 @app.get("/login")
