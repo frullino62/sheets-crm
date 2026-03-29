@@ -1,33 +1,46 @@
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse, RedirectResponse
 import sheets_db
 
 app = FastAPI()
 
-# 🔴 TEMPLATE CONFIG (fix definitivo Jinja)
-templates = Jinja2Templates(directory="templates")
-templates.env.cache = {}  # evita errore "unhashable type: dict"
 
-
-@app.get("/")
-def home(request: Request):
+@app.get("/", response_class=HTMLResponse)
+def home():
     try:
         clienti = sheets_db.get_all()
-
-        # 🔴 assicura che siano dict puri
-        clienti = [dict(c) for c in clienti]
-
     except Exception as e:
-        return {"errore": str(e)}
+        return f"<h1>Errore: {str(e)}</h1>"
 
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "clienti": clienti
-        }
-    )
+    html = """
+    <html>
+    <head>
+        <title>CRM</title>
+    </head>
+    <body>
+        <h1>Clienti</h1>
+
+        <form action="/add">
+            Nome: <input type="text" name="nome">
+            Email: <input type="text" name="email">
+            <button type="submit">Aggiungi</button>
+        </form>
+
+        <ul>
+    """
+
+    for i, c in enumerate(clienti):
+        nome = c.get("nome", "")
+        email = c.get("email", "")
+        html += f"<li>{nome} - {email} <a href='/delete/{i}'>❌</a></li>"
+
+    html += """
+        </ul>
+    </body>
+    </html>
+    """
+
+    return html
 
 
 @app.get("/add")
