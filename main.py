@@ -10,8 +10,11 @@ app = FastAPI()
 app.include_router(auth_router)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+templates = Jinja2Templates(directory="templates")
 
+import os
+
+print("FILES:", os.listdir("templates"))
 
 @app.get("/")
 def home(request: Request):
