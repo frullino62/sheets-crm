@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
 <body>
-OK
+
+<h1>Clienti</h1>
+
+<ul>
+{% for c in clienti %}
+    <li>{{ c.nome }} - {{ c.email }}</li>
+{% endfor %}
+</ul>
+
 </body>
 </html>
