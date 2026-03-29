@@ -15,81 +15,128 @@ def home():
     html = """
     <html>
     <head>
-        <title>CRM</title>
+        <title>CRM PRO</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <style>
             body {
-                font-family: Arial;
-                background: #f5f7fa;
-                padding: 40px;
+                font-family: 'Segoe UI', sans-serif;
+                background: #0f172a;
+                color: #fff;
+                margin: 0;
+                padding: 0;
             }
-            h1 {
-                color: #333;
-            }
+
             .container {
-                max-width: 700px;
+                max-width: 900px;
                 margin: auto;
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                padding: 30px;
             }
-            form {
+
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .card {
+                background: #1e293b;
+                padding: 20px;
+                border-radius: 12px;
                 margin-bottom: 20px;
             }
+
             input {
-                padding: 10px;
-                margin-right: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-            button {
-                padding: 10px 15px;
+                padding: 12px;
+                border-radius: 8px;
                 border: none;
-                background: #4CAF50;
+                margin-right: 10px;
+                width: 200px;
+            }
+
+            button {
+                padding: 12px 18px;
+                border-radius: 8px;
+                border: none;
+                background: #22c55e;
                 color: white;
-                border-radius: 5px;
                 cursor: pointer;
             }
+
             button:hover {
-                background: #45a049;
+                background: #16a34a;
             }
+
+            .search {
+                width: 100%;
+                margin-bottom: 20px;
+                padding: 12px;
+                border-radius: 8px;
+                border: none;
+            }
+
             .cliente {
                 display: flex;
                 justify-content: space-between;
-                padding: 10px;
-                border-bottom: 1px solid #eee;
+                padding: 15px;
+                border-bottom: 1px solid #334155;
             }
+
             .delete {
-                color: red;
+                color: #ef4444;
                 text-decoration: none;
                 font-weight: bold;
             }
+
+            .delete:hover {
+                color: #dc2626;
+            }
         </style>
+
+        <script>
+            function searchClient() {
+                let input = document.getElementById("search").value.toLowerCase();
+                let items = document.getElementsByClassName("cliente");
+
+                for (let i = 0; i < items.length; i++) {
+                    let text = items[i].innerText.toLowerCase();
+                    items[i].style.display = text.includes(input) ? "" : "none";
+                }
+            }
+        </script>
     </head>
 
     <body>
         <div class="container">
-            <h1>CRM Clienti</h1>
 
-            <form action="/add">
-                <input type="text" name="nome" placeholder="Nome" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <button type="submit">Aggiungi</button>
-            </form>
+            <h1>🚀 CRM PRO</h1>
 
+            <div class="card">
+                <form action="/add">
+                    <input type="text" name="nome" placeholder="Nome" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <button type="submit">Aggiungi</button>
+                </form>
+            </div>
+
+            <input id="search" class="search" placeholder="🔎 Cerca cliente..." onkeyup="searchClient()">
+
+            <div class="card">
     """
 
     for i, c in enumerate(clienti):
         nome = c.get("nome", "")
         email = c.get("email", "")
+
         html += f"""
-            <div class="cliente">
-                <span>{nome} - {email}</span>
-                <a class="delete" href="/delete/{i}">❌</a>
-            </div>
+        <div class="cliente">
+            <span>{nome} - {email}</span>
+            <a class="delete" href="/delete/{i}">✖</a>
+        </div>
         """
 
     html += """
+            </div>
+
         </div>
     </body>
     </html>
