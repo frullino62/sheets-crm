@@ -1,36 +1,32 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 import sheets_db
 
 app = FastAPI()
 
-import os
-
-BASE_DIR = os.path.dirname(__file__)   # 🔴 PRIMA DEFINISCI
-
-print("BASE_DIR:", BASE_DIR)
-print("FILES:", os.listdir(BASE_DIR))
-print("TEMPLATES:", os.listdir(os.path.join(BASE_DIR, "templates")))
-
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+# 🔴 TEMPLATE CONFIG (fix definitivo Jinja)
+templates = Jinja2Templates(directory="templates")
+templates.env.cache = {}  # evita errore "unhashable type: dict"
 
 
 @app.get("/")
 def home(request: Request):
+    try:
+        clienti = sheets_db.get_all()
+
+        # 🔴 assicura che siano dict puri
+        clienti = [dict(c) for c in clienti]
+
+    except Exception as e:
+        return {"errore": str(e)}
+
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "clienti": []
+            "clienti": clienti
         }
-    )
-
-
-@app.get("/login")
-def login_page(request: Request):
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": request}
     )
 
 
@@ -48,4 +44,7 @@ def delete(index: int):
 
 @app.get("/clienti")
 def clienti():
-    return {"status": "success", "records": sheets_db.get_all()}
+    return {
+        "status": "success",
+        "records": sheets_db.get_all()
+    }
