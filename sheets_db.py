@@ -20,17 +20,44 @@ creds = Credentials.from_service_account_info(
 client = gspread.authorize(creds)
 
 
-def sheet():
-    return client.open_by_key(SHEET_ID).sheet1
+def clienti_sheet():
+    return client.open_by_key(SHEET_ID).worksheet("Clienti")
 
 
-def get_all():
-    return sheet().get_all_records()
+def opere_sheet():
+    return client.open_by_key(SHEET_ID).worksheet("Opere")
+
+
+# -------- CLIENTI --------
+
+def get_clienti():
+    return clienti_sheet().get_all_records()
 
 
 def add_cliente(nome, email):
-    sheet().append_row([nome, email])
+    clienti = get_clienti()
+    new_id = len(clienti) + 1
+    clienti_sheet().append_row([new_id, nome, email])
 
 
 def delete_cliente(index):
-    sheet().delete_rows(index + 2)
+    clienti_sheet().delete_rows(index + 2)
+
+
+# -------- OPERE --------
+
+def get_opere():
+    return opere_sheet().get_all_records()
+
+
+def add_opera(cliente_id, barca, opera, tipo):
+    opere = get_opere()
+    new_id = len(opere) + 1
+    opere_sheet().append_row([new_id, cliente_id, barca, opera, tipo])
+
+
+# -------- RELAZIONI --------
+
+def get_opere_by_cliente(cliente_id):
+    opere = get_opere()
+    return [o for o in opere if str(o.get("cliente_id")) == str(cliente_id)]
