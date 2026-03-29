@@ -19,10 +19,13 @@ templates.env = Environment(loader=FileSystemLoader("templates"), auto_reload=Tr
 
 @app.get("/")
 def home(request: Request):
-    clienti = sheets_db.get_all()
+    try:
+        clienti = sheets_db.get_all()
+    except Exception as e:
+        return {"errore": str(e)}  # debug
 
     return templates.TemplateResponse(
-        "index.html",   # 🔴 STRINGA, NON dict
+        "index.html",
         {
             "request": request,
             "clienti": clienti
